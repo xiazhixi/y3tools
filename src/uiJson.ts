@@ -16,29 +16,33 @@ type Parent = {
     name: string;
     path: string;
     uid?: string;
+    top?: boolean;
     type: 'pannel' | 'prefab' | 'ui'
 };
 
 const covertData = (json: Pannel
-    | UIElement | PrefabElement, parentInfo?: Parent) => {
+    | UIElement | PrefabElement, parentInfo?: Parent, index?: number) => {
     const result: any = { ...json };
     const base = parentInfo?.path ? parentInfo.path + '.' : '';
-    result.path = base + result.name;
-    result.parent = parentInfo;
+    const path = base + result.name;
+    const parent = parentInfo;
     for (const key in json) {
         const value = json[key];
         if (value?.__tuple__) {
             json[key] = value.items;
         } else if (key === 'children') {
+            let index = 0;
             for (const child of value) {
-                covertData(child, { name: result.name, path: result.path, uid: result.uid, type: !parentInfo ? 'pannel' : 'ui' });
+                index += 1;
+                covertData(child, { name: result.name, path, uid: result.uid, type: !parentInfo ? 'pannel' : 'ui' }, index);
             }
         }
     }
-    uiMaps[result.uid] = {
+    uiMaps[result.uid || result.prefab_key || path || result.name] = {
         name: result.name,
-        path: result.path,
-        parent: parentInfo
+        path: path,
+        self_index: index,
+        parent
     };
     return result;
 };
