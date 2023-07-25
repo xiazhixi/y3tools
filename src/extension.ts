@@ -2,34 +2,7 @@ import * as vscode from "vscode";
 import * as statusBarItem from "./statusBarItem";
 import { parseUIJson } from "./uiJson";
 
-// 判断当前打开的目录下根目录，是否有header.map文件
-async function folderCheck() {
-  const workspaceFolders = vscode.workspace.workspaceFolders;
-  if (!workspaceFolders) {
-    return;
-  }
-  const workspaceRoot = workspaceFolders[0].uri.fsPath;
-  const headerMapPath = `${workspaceRoot}/header.map`;
-  const headerMapExists = await vscode.workspace.fs
-    .stat(vscode.Uri.file(headerMapPath))
-    .then(
-      () => true,
-      () => false
-    );
-  if (!headerMapExists) {
-    console.log("当前工作目录非Y3地图目录");
-    return false;
-  }
-  return true;
-}
-
-
 export async function activate(context: vscode.ExtensionContext) {
-  // 判断当前打开的目录下，是否有header.map文件
-  const isY3 = await folderCheck();
-  if (!isY3) {
-    return;
-  }
   const disposable = vscode.commands.registerCommand(
     "y3tools.showCommands",
     async () => {
