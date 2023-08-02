@@ -50,8 +50,10 @@ const uiJson = {};
 const prefabJson = {};
 const uiMaps = {};
 
+let index = 0;
 // 读取工作目录 ui 文件夹下的所有 json 文件
 async function readUIJson() {
+    index = 0;
     const workspaceFolders = vscode.workspace.workspaceFolders;
     if (!workspaceFolders) {
         return;
@@ -87,9 +89,8 @@ export async function parseUIJson() {
     await readUIJson();
     let uiJsonLua = '';
     let outString = 'return {\n';
-    let index = 0;
     for (const key in uiJson) {
-        index = index++;
+        index = ++index;
         uiJsonLua += `local UI${index} = ${jsObjectToLuaPretty(uiJson[key])}\n`;
         outString += `    ${makeLuaKey(key)} = UI${index},\n`;
     }
