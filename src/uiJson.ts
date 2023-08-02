@@ -1,7 +1,7 @@
 // 读取文件
 /* eslint-disable @typescript-eslint/naming-convention */
 import * as vscode from "vscode";
-import { jsObjectToLuaPretty } from "json_to_lua";
+import { jsObjectToLuaPretty, makeLuaKey } from "./utils/json_to_lua";
 import { Pannel, Prefab, PrefabElement, UIElement } from "./@types/ui";
 const fs = require("fs");
 const path = require("path");
@@ -38,7 +38,7 @@ const covertData = (json: Pannel
             }
         }
     }
-    uiMaps[result.uid || result.prefab_key || path || result.name] = {
+    uiMaps[result.uid || path || result.name] = {
         name: result.name,
         path: path,
         self_index: index,
@@ -74,7 +74,7 @@ async function readUIJson() {
                         type: 'prefab',
                         uid: key,
                         name: value.name || value.prefab_key,
-                        path: ''
+                        path: value.name
                     });
                 }
             }
@@ -82,15 +82,16 @@ async function readUIJson() {
     }
 }
 
+
 export async function parseUIJson() {
     await readUIJson();
     let uiJsonLua = '';
     let outString = 'return {\n';
+    let index = 0;
     for (const key in uiJson) {
-        uiJsonLua += `local ${key} = ${jsObjectToLuaPretty(uiJson[key])}\n`;
-        const json = uiJson[key];
-        const lua = jsObjectToLuaPretty(json);
-        outString += `    ${key} = ${key},\n`;
+        index = index++;
+        uiJsonLua += `local UI${index} = ${jsObjectToLuaPretty(uiJson[key])}\n`;
+        outString += `    ${makeLuaKey(key)} = UI${index},\n`;
     }
     uiJsonLua += outString + '}\n';
     // 写入文件至 script/y3toolsJson/ui.lua
