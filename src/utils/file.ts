@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { FILE_PATH } from "./config";
+import { FILE_PATH } from "../config";
 const fs = require("fs");
 
 export async function saveFile(

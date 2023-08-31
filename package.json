@@ -3,7 +3,7 @@
   "displayName": "y3tools",
   "description": "用于英雄三国（Y3）编辑器的工具集合插件",
   "publisher": "xiazhixi",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "icon": "icon.png",
   "repository": "https://github.com/xiazhixi/y3tools.git",
   "engines": {

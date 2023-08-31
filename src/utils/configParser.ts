@@ -60,7 +60,6 @@ function parseLine(line: string): ProcessStep {
     step.type = "static";
     step.id = match[1];
   } else {
-    console.log(line);
     throw new Error(`无效的行格式: ${line}`);
   }
 

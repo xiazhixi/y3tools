@@ -1,16 +1,11 @@
 // 读取文件
 /* eslint-disable @typescript-eslint/naming-convention */
 import * as vscode from "vscode";
-import { jsObjectToLuaPretty, makeLuaKey } from "./utils/json_to_lua";
-import { Pannel, Prefab, PrefabElement, UIElement } from "./@types/ui";
+import { jsObjectToLuaPretty, makeLuaKey } from "../utils/json_to_lua";
+import { Pannel, Prefab, PrefabElement, UIElement } from "../@types/ui";
+import decodeUnicode from "../utils/decodeUnicode";
 const fs = require("fs");
 const path = require("path");
-
-function decodeUnicode(str: string) {
-    return str.replace(/\\u([\dA-Fa-f]{4})/g, (_, p1) => {
-        return String.fromCharCode(parseInt(p1, 16));
-    });
-}
 
 type Parent = {
     name: string;
